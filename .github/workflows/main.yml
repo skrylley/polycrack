@@ -21,8 +21,10 @@ jobs:
 
       - name: Install dependencies
         run: |
+      - name: Install dependencies
+        run: |
           python -m pip install --upgrade pip
-          python -m pip install distutils  # Instalează distutils
+          python -m pip install kivy requests beautifulsoup4 selenium pyopenssl
           python -m pip install buildozer  # Instalează Buildozer
 
       - name: Build with Buildozer
