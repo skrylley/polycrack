@@ -21,26 +21,22 @@ jobs:
 
       - name: Install dependencies
         run: |
-      - name: Install dependencies
-        run: |
           python -m pip install --upgrade pip
           python -m pip install kivy requests beautifulsoup4 selenium pyopenssl
           sudo apt update
-          
           sudo apt install git zip unzip openjdk-17-jdk autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
           pip install buildozer Cython==0.29.33
           buildozer init
+
       - name: Install AIDL
         run: |
           sudo apt-get update
           sudo apt-get install -y aidl
+
       - name: Ensure sdkmanager is available
         run: |
           echo 'export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/bin' >> $GITHUB_ENV
           echo 'export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools' >> $GITHUB_ENV
-
-      - name: Accept Android SDK Licenses
-        run: yes | sdkmanager --licenses
 
       - name: Set up Android SDK
         run: |
@@ -48,7 +44,9 @@ jobs:
           mkdir android-sdk
           unzip -d android-sdk android-sdk-tools.zip
           echo 'export ANDROID_SDK_ROOT=$PWD/android-sdk' >> $GITHUB_ENV
-          
+      - name: Accept Android SDK Licenses
+        run: yes | sdkmanager --licenses
+
       - name: Build with Buildozer
         run: |
           buildozer -v android debug  # Comandă pentru a construi aplicația Android folosind Buildozer
