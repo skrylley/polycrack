@@ -39,6 +39,16 @@ def append_to_csv(filename, *data):
     except Exception as e:
         print(f"Eroare la adăugarea în fișierul '{filename}':", e)
 
+def append_to_txt(filename, *data):
+    try:
+        with open(filename, 'a', encoding='utf-8') as file:
+            for item in data:
+                file.write(str(item))
+                file.write(';')  # Adaugi separatorul ';'
+            file.write('\n')  # Adaugi un rând nou la sfârșitul fiecărei linii
+
+    except Exception as e:
+        print(f"Eroare la adăugarea în fișierul '{filename}': {e}")
 
 
 def read_csv_file(filename, name):
@@ -67,6 +77,32 @@ def read_csv_file(filename, name):
         print(f"Eroare la citirea fișierului '{name}'.csv:", e)
         return None, None
 
+def read_txt_file(filename, name):
+    users = []
+    passwords = []
+
+    try:
+        with open(filename, 'r', encoding='utf-8') as file:
+            lines = file.readlines()
+            
+            for line_num, line in enumerate(lines, start=1):
+                columns = line.strip().split(';')
+                if len(columns) >= 2:
+                    users.append(columns[0].strip())
+                    passwords.append(columns[1].strip())
+                else:
+                    print(f"Linia {line_num} din fișierul '{name}.txt' nu are suficiente coloane și va fi ignorată.")
+
+        print(f"Fișierul {name}.txt a fost citit cu succes.")
+        return users, passwords
+
+    except FileNotFoundError:
+        print(f"Eroare: Fișierul '{name}.txt' nu a fost găsit.")
+        return None, None
+    except Exception as e:
+        print(f"Eroare la citirea fișierului '{name}.txt': {e}")
+        return None, None
+    
 
 def check_internet_connection(url):
     try:
@@ -80,7 +116,7 @@ def open_browser(url):
     try:
         # Configurare selenium
         options = webdriver.ChromeOptions()
-        options.add_argument('headless')  # Rulare în modul fără interfață grafică
+        #options.add_argument('headless')  # Rulare în modul fără interfață grafică
         driver = webdriver.Chrome(options=options)
         
         # Accesare site
@@ -100,28 +136,30 @@ def close_browser(driver):
 
 def navigate_website_captcha(driver, username, password):
     try:
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'ctl0_ctl12_Username')))
         username_input = driver.find_element(By.ID,'ctl0_ctl12_Username')
         username_input.clear()
         username_input.send_keys(username)
 
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'ctl0_ctl12_Password')))
         password_input = driver.find_element(By.ID,'ctl0_ctl12_Password')
         password_input.clear()
         password_input.send_keys(password)
-        
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'ctl0_ctl12_LoginButton')))
         login_button = driver.find_element(By.ID,'ctl0_ctl12_LoginButton')
         login_button.click()
         
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'content')))
         driver.refresh()
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'content')))
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'ctl0_ctl12_LBlogout')))
         if 'ctl0_ctl12_LBlogout' in driver.page_source:
             #print("OK")
             additional_button = driver.find_element(By.ID,'ctl0_ctl12_LBlogout')
             additional_button.click()
+            
             return 0
         else:
             print("Skip")
-            driver.refresh()
             return 1
     except Exception as e:
         print("Eroare fatala:", e)
@@ -131,16 +169,17 @@ def navigate_website_captcha(driver, username, password):
 
 def navigate_website(driver, username, password):
     try:
-
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'ctl0_ctl12_Username')))
         username_input = driver.find_element(By.ID,'ctl0_ctl12_Username')
         username_input.clear()
         username_input.send_keys(username)
 
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'ctl0_ctl12_Password')))
         password_input = driver.find_element(By.ID,'ctl0_ctl12_Password')
         password_input.clear()
         password_input.send_keys(password)
         
- 
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'ctl0_ctl12_LoginButton')))
         login_button = driver.find_element(By.ID,'ctl0_ctl12_LoginButton')
         login_button.click()
         
@@ -162,7 +201,8 @@ def navigate_website(driver, username, password):
             #append_to_csv(out_filename, username, content)
             
             if (username in cnpOut) == 0:
-                append_to_csv(outfile, username, content)
+                append_to_txt(outfile, username, content)
+            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'ctl0_ctl12_LBlogout')))
             additional_button = driver.find_element(By.ID,'ctl0_ctl12_LBlogout')
             additional_button.click()
         else:
@@ -189,8 +229,8 @@ if __name__ == "__main__":
     
     filename = os.path.join(os.path.dirname(__file__), denumire + '.csv')
 
-    outfile = os.path.join(os.path.dirname(__file__), outfiledata + '.csv')
-    cnpOut, nameOut = read_csv_file(outfile, outfiledata)
+    outfile = os.path.join(os.path.dirname(__file__), outfiledata + '.txt')
+    cnpOut, nameOut = read_txt_file(outfile, outfiledata)
 
     #out_filename = "out_" + denumire + ".csv"
     out_filename = os.path.join(os.path.dirname(__file__), "out_" + denumire + '.csv')
@@ -210,10 +250,13 @@ if __name__ == "__main__":
             password = passw[i]
             if(navigate_website_captcha(driver, 5021227460022, 460022) == 0):
                 if(navigate_website(driver, username, password)==1):
+                    print("normal ALO!")
                     close_browser(driver)
                     driver = open_browser("https://studenti.pub.ro/")
             else:
-                SRNO = 0
+                print("CAPTCHA ALO!")
+                close_browser(driver)
+                driver = open_browser("https://studenti.pub.ro/")
         close_browser(driver)
     exitvar = "y"
         
