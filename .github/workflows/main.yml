@@ -27,6 +27,8 @@ jobs:
           python -m pip install kivy requests beautifulsoup4 selenium pyopenssl
           python -m pip install buildozer  # Instalează Buildozer
           python -m pip install Cython
+          sudo apt-get update
+          sudo apt-get install -y aidl  # Instalează AIDL
 
       - name: Build with Buildozer
         run: |
