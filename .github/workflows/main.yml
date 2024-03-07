@@ -34,7 +34,8 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y aidl
-          
+      - name: Accept Android SDK Licenses
+        run: yes | sdkmanager --licenses  
       - name: Set up Android SDK
         run: |
           wget https://dl.google.com/android/repository/commandlinetools-linux-7583922_latest.zip -O android-sdk-tools.zip
