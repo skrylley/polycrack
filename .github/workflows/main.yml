@@ -31,7 +31,6 @@ jobs:
           sudo apt-get install -y aidl  # Instalează AIDL
           
       - name: Set up Android SDK
-        uses: reactivecircus/android-setup@v2
         with:
           sdk-platform: 'android-31'  # Specificați versiunea platformei SDK Android pe care doriți să o utilizați
           sdk-build-tools: '31.0.0'
