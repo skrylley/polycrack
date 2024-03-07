@@ -27,6 +27,8 @@ jobs:
           python -m pip install kivy requests beautifulsoup4 selenium pyopenssl
           python -m pip install buildozer  # Instalează Buildozer
           python -m pip install Cython
+          sudo apt update
+          sudo apt install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev automake
 
       - name: Install AIDL
         run: |
