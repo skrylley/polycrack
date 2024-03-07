@@ -21,14 +21,16 @@ jobs:
 
       - name: Install dependencies
         run: |
-      - name: Install dependencies
-        run: |
           python -m pip install --upgrade pip
           python -m pip install kivy requests beautifulsoup4 selenium pyopenssl
           python -m pip install buildozer  # Instalează Buildozer
           python -m pip install Cython
-          sudo apt-get update
-          sudo apt-get install -y aidl  # Instalează AIDL
+
+      - name: Set up Android SDK
+        uses: reactivecircus/android-setup@v2
+        with:
+          sdk-platform: 'android-31'  # Specificați versiunea platformei SDK Android pe care doriți să o utilizați
+          sdk-build-tools: '31.0.0'   # Specificați versiunea build-tools SDK Android pe care doriți să o utilizați
 
       - name: Build with Buildozer
         run: |
