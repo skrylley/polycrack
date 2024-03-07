@@ -34,16 +34,20 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y aidl
+      - name: Ensure sdkmanager is available
+        run: |
+          echo 'export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/bin' >> $GITHUB_ENV
+          echo 'export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools' >> $GITHUB_ENV
+
       - name: Accept Android SDK Licenses
-        run: yes | sdkmanager --licenses  
+        run: yes | sdkmanager --licenses
+
       - name: Set up Android SDK
         run: |
           wget https://dl.google.com/android/repository/commandlinetools-linux-7583922_latest.zip -O android-sdk-tools.zip
           mkdir android-sdk
           unzip -d android-sdk android-sdk-tools.zip
           echo 'export ANDROID_SDK_ROOT=$PWD/android-sdk' >> $GITHUB_ENV
-          echo 'export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/bin' >> $GITHUB_ENV
-          echo 'export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools' >> $GITHUB_ENV
           
       - name: Build with Buildozer
         run: |
