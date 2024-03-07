@@ -26,7 +26,6 @@ jobs:
 
       - name: Build with Buildozer
         run: |
-          cd downloads  # Schimbă aici directorul în care se află fișierul polycrack.py
           buildozer -v android debug  # Comandă pentru a construi aplicația Android folosind Buildozer
 
       - name: Upload artifacts
