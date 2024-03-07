@@ -31,9 +31,13 @@ jobs:
           sudo apt-get install -y aidl  # Instalează AIDL
           
       - name: Set up Android SDK
-        with:
-          sdk-platform: 'android-31'  # Specificați versiunea platformei SDK Android pe care doriți să o utilizați
-          sdk-build-tools: '31.0.0'
+        run: |
+          wget https://dl.google.com/android/repository/commandlinetools-linux-7583922_latest.zip -O android-sdk-tools.zip
+          mkdir android-sdk
+          unzip -d android-sdk android-sdk-tools.zip
+          echo 'export ANDROID_SDK_ROOT=$PWD/android-sdk' >> $GITHUB_ENV
+          echo 'export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/bin' >> $GITHUB_ENV
+          echo 'export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools' >> $GITHUB_ENV
           
       - name: Build with Buildozer
         run: |
