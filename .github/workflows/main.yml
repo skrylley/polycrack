@@ -27,8 +27,11 @@ jobs:
           python -m pip install kivy requests beautifulsoup4 selenium pyopenssl
           python -m pip install buildozer  # Instalează Buildozer
           python -m pip install Cython
+
+      - name: Install AIDL
+        run: |
           sudo apt-get update
-          sudo apt-get install -y aidl  # Instalează AIDL
+          sudo apt-get install -y aidl
           
       - name: Set up Android SDK
         run: |
