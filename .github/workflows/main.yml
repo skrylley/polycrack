@@ -26,6 +26,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install kivy requests beautifulsoup4 selenium pyopenssl
           python -m pip install buildozer  # Instalează Buildozer
+          python -m pip install Cython
 
       - name: Build with Buildozer
         run: |
