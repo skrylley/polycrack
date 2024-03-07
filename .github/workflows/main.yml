@@ -19,11 +19,14 @@ jobs:
         with:
           python-version: '3.x'  # Specifică aici versiunea de Python necesară
 
+      - name: Install distutils
+        run: |
+          python -m pip install distutils
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install distutils
-          python -m pip install buildozer  # Instalează Buildozer
+          pip install buildozer  # Instalează Buildozer
 
       - name: Build with Buildozer
         run: |
